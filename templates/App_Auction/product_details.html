@@ -155,6 +155,7 @@
                 </div>
                 <div class="row mt-3">
                     {% if timeup %}
+                        <h4>{{ winner }}</h4>
                     {% else %}
                         <form method="post" class="form-group" action="{% url 'App_Auction:bid-request' %}">
                             {% csrf_token %}
@@ -195,12 +196,14 @@
                 </thead>
                 <tbody>
                 {% for bid in bidding_table %}
-                    <tr>
-                        <td data-label="Date">{{ bid.date }}</td>
-                        <td data-label="Product Name">{{ product.product_name }}</td>
-                        <td data-label="Bidder Name">{{ bid.bidder }}</td>
-                        <td data-label="Bidding Price">{{ bid.price }}</td>
-                    </tr>
+                    {% if bid.bidder %}
+                        <tr>
+                            <td data-label="Date">{{ bid.date }}</td>
+                            <td data-label="Product Name">{{ product.product_name }}</td>
+                            <td data-label="Bidder Name">{{ bid.bidder }}</td>
+                            <td data-label="Bidding Price">{{ bid.price }}</td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>

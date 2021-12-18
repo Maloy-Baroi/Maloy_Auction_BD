@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -20,7 +22,6 @@ def home_view(request):
             minimum_price = request.POST.get('minimum_bid_price')
             form_save = form.save(commit=False)
             form_save.user = request.user
-            form_save.selling_price = int(minimum_price) + 1
             form_save.status = True
             form_save.save()
             print(f"New product ID: {form_save.pk}")
@@ -36,14 +37,8 @@ def home_view(request):
 
 def product_details_view(request, product_key):
     product = ProductModel.objects.get(id=product_key)
-    bidding_table = ProductLastPrices.objects.filter(product=product)
-    bidding_table_list = []
-    for i in bidding_table:
-        if not i.bidder:
-            pass
-        else:
-            bidding_table_list.append(i)
-
+    print(product)
+    bidding_table = ProductLastPrices.objects.all().filter(product_id=product_key)
     bidder = False
     min_bid_price = product.minimum_bid_price
     try:
@@ -54,16 +49,31 @@ def product_details_view(request, product_key):
     except:
         bidder = False
 
+    # Date
+    today = datetime.datetime.today().date()
+    # Date End
+    # Product Bidding Date Ended or not (Start)
+    winner = None
+    if product.auction_end_date < today:
+        product.status = False
+        max_price = max([i.price for i in bidding_table.order_by('date')])
+        winner_list = [i for i in bidding_table if i.price == max_price]
+        old_date = min([i.date for i in winner_list])
+        winner = [i for i in winner_list if i.date == old_date]
+
+    # Product Bidding Date Ended or not (End)
+
     if not product.status:
         timeup = True
     else:
         timeup = False
     content = {
         'product': product,
-        'bidding_table': bidding_table_list,
+        'bidding_table': bidding_table,
         'bidder_exist': bidder,
         'min_bid_price': min_bid_price,
         'timeup': timeup,
+        'winner': winner
     }
 
     return render(request, 'App_Auction/product_details.html', context=content)
