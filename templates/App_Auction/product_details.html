@@ -3,18 +3,207 @@
     {{ product.product_name }}
 {% endblock %}
 {% block main %}
+
+    <style>
+        ._product-details {
+            padding: 60px;
+            box-shadow: 0 0 5px #2c3034;
+            -webkit-box-shadow: 0 0 5px #2c3034;
+        }
+
+        ._minimum-bidding-price {
+            font-weight: bold;
+            font-size: 16px;
+            color: rgba(139, 0, 0, 0.89);
+        }
+
+        .startBtn {
+            -webkit-box-shadow: 0 0 3px darkred;
+            box-shadow: 0 0 3px darkred;
+            background-color: darkred;
+            color: #fff3cd;
+        }
+
+        .startBtn:hover {
+            -webkit-box-shadow: 0 0 8px darkred;
+            box-shadow: 0 0 8px darkred;
+            background-color: darkred;
+            color: #fff3cd;
+        }
+
+        /* Table Style Start */
+        table {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        table caption {
+            font-size: 1.5em;
+            margin: .5em 0 .75em;
+        }
+
+        table tr {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: .35em;
+        }
+
+        table th,
+        table td {
+            padding: .625em;
+            text-align: center;
+        }
+
+        table th {
+            font-size: .85em;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        @media screen and (max-width: 600px) {
+            table {
+                border: 0;
+            }
+
+            table caption {
+                font-size: 1.3em;
+            }
+
+            table thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            table tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: .625em;
+            }
+
+            table td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
+
+            table td::before {
+                /*
+                * aria-label has no advantage, it won't be read inside a table
+                content: attr(aria-label);
+                */
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            table td:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        /* Table Style End */
+    </style>
+
     <div class="container">
         <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h3 class="alert-warning text-center p-3 m-2 text-uppercase">{{ message }}</h3>
+                    {% endfor %}
+
+                {% endif %}
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row p-3 m-3">
             <div class="col-md-6">
                 <div class="p-3">
                     <img src="{{ product.product_photo.url }}" alt="Product Photo">
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 _product-details">
                 <div class="row">
-
+                    <h3>{{ product.product_name }}</h3>
+                    <hr>
+                </div>
+                <div class="row mt-5">
+                    <p>
+                        <span class="_minimum-bidding-price">
+                            Minimum Bid Price: {{ product.minimum_bid_price }}
+                        </span>
+                    </p>
+                    <p>
+                        Auction End At: {{ product.auction_end_date }}
+                    </p>
+                </div>
+                <div class="row mt-3">
+                    {% if timeup %}
+                    {% else %}
+                        <form method="post" class="form-group" action="{% url 'App_Auction:bid-request' %}">
+                            {% csrf_token %}
+                            <input type="number" value="{{ product.id }}" name="product_key" style="display: none">
+                            <input type="number" min="{{ product.minimum_bid_price }}" name="bid_price"
+                                   value="{{ min_bid_price }}"
+                                   placeholder="Your Price" class="form-control">
+                            <div class="form-group">
+                                {% if bidder_exist %}
+                                    <button class="btn mt-3 startBtn" type="submit">Update Bid</button>
+                                {% else %}
+                                    <button class="btn mt-3 startBtn" type="submit">Start Bidding</button>
+                                {% endif %}
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="row mt-5" style="cursor: none">
+                    <h5 style="margin: 10px 0;">
+                        <a style="text-decoration: #2c3034;">Description</a>
+                    </h5>
+                    <p>
+                        {{ product.product_description|safe }}
+                    </p>
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <table>
+                <caption>Last Bidding Prices</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Bidder Name</th>
+                    <th scope="col">Bidding Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for bid in bidding_table %}
+                    <tr>
+                        <td data-label="Date">{{ bid.date }}</td>
+                        <td data-label="Product Name">{{ product.product_name }}</td>
+                        <td data-label="Bidder Name">{{ bid.bidder }}</td>
+                        <td data-label="Bidding Price">{{ bid.price }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django_mysql.models import ListCharField
 
@@ -20,8 +22,14 @@ class ProductModel(models.Model):
     created = models.DateTimeField(auto_now=True)
 
 
+now = datetime.datetime.now()
+
+
 class ProductLastPrices(models.Model):
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     price = models.PositiveIntegerField()
+    date = models.DateField(auto_now=True)
+
 
 # user input, Product Name, Product Description, Product Photo, Minimum Bid Price, and Auction End DateTime
