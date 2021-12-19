@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}
+    Participation
+{% endblock %}
+{% block main %}
+    <style>
+        /* Table Style Start */
+        table {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        table caption {
+            font-size: 1.5em;
+            margin: .5em 0 .75em;
+        }
+
+        table tr {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: .35em;
+        }
+
+        table th,
+        table td {
+            padding: .625em;
+            text-align: center;
+        }
+
+        table th {
+            font-size: .85em;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        @media screen and (max-width: 600px) {
+            table {
+                border: 0;
+            }
+
+            table caption {
+                font-size: 1.3em;
+            }
+
+            table thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            table tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: .625em;
+            }
+
+            table td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
+
+            table td::before {
+                /*
+                * aria-label has no advantage, it won't be read inside a table
+                content: attr(aria-label);
+                */
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            table td:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        /* Table Style End */
+    </style>
+
+    <div class="container">
+        <table>
+            <legend style="margin: 30px 0; padding: 15px; text-align: center">Auctions</legend>
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Bidding Price</th>
+                <th scope="col">Update Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for auction in user_part_auction %}
+                <tr>
+                    <td data-label="Date">{{ auction.date }}</td>
+                    <td data-label="Product Name">{{ auction.product.product_name }}</td>
+                    <td data-label="Bidding Price">{{ auction.price }}</td>
+                    <td data-label="Update Price">
+                        <button class="btn btn-warning"
+                                onclick="window.location.href='{% url "App_Auction:product-details" product_key=auction.product.id %}'">
+                            Update
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

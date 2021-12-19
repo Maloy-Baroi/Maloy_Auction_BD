@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'App_Authentication.apps.AppAuthenticationConfig',
     'App_Auction.apps.AppAuctionConfig',
+    'App_Admin.apps.AppAdminConfig',
     'crispy_forms'
 ]
 
@@ -132,6 +133,8 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGIN_URL = 'App_Admin:admin-authentication'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

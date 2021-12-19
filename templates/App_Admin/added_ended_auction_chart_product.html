@@ -1,0 +1,122 @@
+{% extends 'App_Admin/Admin_base.html' %}
+{% load static %}
+{% block title %}
+    Running Auction
+{% endblock %}
+{% block main %}
+
+    <style>
+        /* Table Style Start */
+        table {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .legend {
+            font-weight: 600;
+            font-size: 19px;
+            text-align: center;
+            background-color: #2c3034;
+            color: #ffffff;
+            padding: 1.5rem;
+            margin: 20px 0;
+        }
+
+        table tr {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: .35em;
+        }
+
+        table th,
+        table td {
+            padding: .625em;
+            text-align: center;
+        }
+
+        table th {
+            font-size: .85em;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        @media screen and (max-width: 600px) {
+            table {
+                border: 0;
+            }
+
+            table caption {
+                font-size: 1.3em;
+            }
+
+            table thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            table tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: .625em;
+            }
+
+            table td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
+
+            table td::before {
+                /*
+                * aria-label has no advantage, it won't be read inside a table
+                content: attr(aria-label);
+                */
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            table td:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        /* Table Style End */
+    </style>
+
+    <div>
+        <table>
+            <legend class="legend">Statistic of Running Auction</legend>
+            <thead>
+            <tr>
+                <th scope="col">Product Name</th>
+                <th scope="col">Maximum Bidding Price</th>
+                <th scope="col">Auction End Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in product %}
+                <tr>
+                    <td data-label="Product Name">
+                        <a href="{% url 'App_Admin:added-ended-chart' pk=p.id %}">{{ p.product_name }}</a>
+                    </td>
+                    <td data-label="Maximum Bidding Price">{{ p.product_name }}</td>
+                    <td data-label="Auction End Date">{{ p.auction_end_date }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

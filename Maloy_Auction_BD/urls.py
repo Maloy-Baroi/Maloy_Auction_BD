@@ -22,10 +22,11 @@ from django.urls import path, include
 import App_Auction.views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('super-admin/', admin.site.urls),
     path('', App_Auction.views.home_view, name='home'),
     path('auction/', include('App_Auction.urls')),
     path('accounts/', include('App_Authentication.urls')),
+    path('admin/', include('App_Admin.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)

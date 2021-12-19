@@ -155,7 +155,7 @@
                 </div>
                 <div class="row mt-3">
                     {% if timeup %}
-                        <h4>{{ winner }}</h4>
+                        <h4>Winner: {{ winner }}</h4>
                     {% else %}
                         <form method="post" class="form-group" action="{% url 'App_Auction:bid-request' %}">
                             {% csrf_token %}

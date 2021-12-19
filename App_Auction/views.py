@@ -24,7 +24,6 @@ def home_view(request):
             form_save.user = request.user
             form_save.status = True
             form_save.save()
-            print(f"New product ID: {form_save.pk}")
             bid_price_list = ProductLastPrices(product_id=form_save.pk, price=minimum_price)
             bid_price_list.save()
             return redirect('home')
@@ -37,7 +36,6 @@ def home_view(request):
 
 def product_details_view(request, product_key):
     product = ProductModel.objects.get(id=product_key)
-    print(product)
     bidding_table = ProductLastPrices.objects.all().filter(product_id=product_key)
     bidder = False
     min_bid_price = product.minimum_bid_price
@@ -95,3 +93,20 @@ def bid_start_view(request):
             newBid = ProductLastPrices.objects.create(product=product, bidder=request.user, price=int(bid_price))
             newBid.save()
         return HttpResponseRedirect(reverse('App_Auction:product-details', kwargs={'product_key': product_key}))
+
+
+def user_participant_auctions(request):
+    user_part_auction = ProductLastPrices.objects.all().filter(bidder=request.user)
+    content = {
+        'user_part_auction': user_part_auction
+    }
+    return render(request, 'App_Auction/auction_bag.html', context=content)
+
+
+def my_posted_auctions(request):
+    my_posted_items = ProductModel.objects.all().filter(user=request.user)
+
+    content = {
+        'myposteditems': my_posted_items
+    }
+    return render(request, 'App_Auction/my_posted_items.html', context=content)

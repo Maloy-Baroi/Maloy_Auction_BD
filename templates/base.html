@@ -126,7 +126,7 @@
                             {% if user.is_authenticated %}
                                 <li class="droplink"><a href="" aria-haspopup="true">{{ user }}</a>
                                     <ul class="subdrop" aria-label="Main Links Sub Navigation">
-                                        <li><a href="">My posted items</a></li>
+                                        <li><a href="{% url 'App_Auction:my-posted-auctions' %}">My posted items</a></li>
                                         <li><a href="">Profile Settings</a></li>
                                         <li><a href="{% url 'App_Authentication:logout' %}">Logout</a></li>
                                     </ul>
@@ -138,7 +138,9 @@
                         {% if user.is_authenticated %}
                             <ul class="user-login">
                                 <li>
-                                    <a href="#"> <i class="fa fa-shopping-bag"></i> View My Bids</a>
+                                    <a href="{% url 'App_Auction:user-participant-auction' %}">
+                                        <i class="fa fa-shopping-bag"> View My Bids</i>
+                                    </a>
                                 </li>
                             </ul>
                         {% else %}

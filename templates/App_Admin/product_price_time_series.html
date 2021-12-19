@@ -1,0 +1,169 @@
+{% extends 'App_Admin/Admin_base.html' %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            const ctxDay = document.getElementById('myChartDay').getContext('2d');
+            const myChartDay = new Chart(ctxDay, {
+                type: 'line',
+                data: {
+                    labels: [{% for i in product_price %}"{{ i.date }}",{% endfor %}],
+                    datasets: [{
+                        label: '# of Votes Day',
+                        data: [{% for i in price %} {{ i }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(133,15,41,0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            const ctxHour = document.getElementById('myChartHour').getContext('2d');
+            const myChartHour = new Chart(ctxHour, {
+                type: 'line',
+                data: {
+                    labels: [{% for i in product_price %}"{{ i.date.hour }}Hour",{% endfor %}],
+                    datasets: [{
+                        label: '# of Votes Hour (24 Format)',
+                        data: [{% for i in price %} {{ i }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(133,15,41,0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            const ctxMin = document.getElementById('myChartMin').getContext('2d');
+            const myChartMin = new Chart(ctxMin, {
+                type: 'line',
+                data: {
+                    labels: [{% for i in product_price %}"{{ i.date.hour }}:{{ i.date.minute }}:{{ i.date.second }}",{% endfor %}],
+                    datasets: [{
+                        label: '# of Votes Minutes',
+                        data: [{% for i in price %} {{ i }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(133,15,41,0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+    </script>
+{% endblock %}
+{% block main %}
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Chart-Two
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" onclick="DayCanvas()">Day</a></li>
+            <li><a class="dropdown-item" onclick="HourCanvas()">Hour</a></li>
+            <li><a class="dropdown-item" onclick="MinCanvas()">Minute</a></li>
+        </ul>
+    </div>
+    <div>
+        <canvas id="myChartDay" style="width: 200px;"></canvas>
+    </div>
+    <div>
+        <canvas id="myChartHour" style="width: 200px;"></canvas>
+    </div>
+
+    <div>
+        <canvas id="myChartMin" style="width: 200px;"></canvas>
+    </div>
+    <script>
+        let screenDay = document.getElementById('myChartDay');
+        let screenHour = document.getElementById('myChartHour');
+        let screenMin = document.getElementById('myChartMin');
+
+        function DayCanvas() {
+            screenDay.style.display = 'block';
+            screenHour.style.display = 'none';
+            screenMin.style.display = 'none';
+        }
+
+        function HourCanvas() {
+            screenDay.style.display = 'none';
+            screenHour.style.display = 'block';
+            screenMin.style.display = 'none';
+        }
+
+        function MinCanvas() {
+            screenDay.style.display = 'none';
+            screenHour.style.display = 'none';
+            screenMin.style.display = 'block';
+        }
+    </script>
+{% endblock %}
+

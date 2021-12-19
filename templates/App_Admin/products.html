@@ -1,0 +1,247 @@
+{% extends 'App_Admin/Admin_base.html' %}
+{% block title %}
+    Products Gallery
+{% endblock %}
+{% block main %}
+    <style>
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 80%;
+            padding: 20px;
+            margin: 5px;
+            height: auto;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        {#    Product Details Modal #}
+        ._product-details {
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 5px #2c3034;
+            -webkit-box-shadow: 0 0 5px #2c3034;
+        }
+
+        ._minimum-bidding-price {
+            font-weight: bold;
+            font-size: 16px;
+            color: rgba(139, 0, 0, 0.89);
+        }
+
+        .startBtn {
+            -webkit-box-shadow: 0 0 3px darkred;
+            box-shadow: 0 0 3px darkred;
+            background-color: darkred;
+            color: #fff3cd;
+        }
+
+        .startBtn:hover {
+            -webkit-box-shadow: 0 0 8px darkred;
+            box-shadow: 0 0 8px darkred;
+            background-color: darkred;
+            color: #fff3cd;
+        }
+
+        /* Table Style Start */
+        table {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        table caption {
+            font-size: 1.5em;
+            margin: .5em 0 .75em;
+        }
+
+        table tr {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: .35em;
+        }
+
+        table th,
+        table td {
+            padding: .625em;
+            text-align: center;
+        }
+
+        table th {
+            font-size: .85em;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        @media screen and (max-width: 600px) {
+            table {
+                border: 0;
+            }
+
+            table caption {
+                font-size: 1.3em;
+            }
+
+            table thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+
+            table tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: .625em;
+            }
+
+            table td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
+
+            table td::before {
+                /*
+                * aria-label has no advantage, it won't be read inside a table
+                content: attr(aria-label);
+                */
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            table td:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        /* Table Style End */
+    </style>
+    <div class="container mt-5">
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <a href="" data-bs-toggle="modal" data-bs-target="#exampleModalPhoto{{ product.id }}">
+                            <img src="{{ product.product_photo.url }}" alt="Product Image"
+                                 style="width:100%; height: 300px">
+                        </a>
+                        <div class="container">
+                            <h6><b>{{ product.product_name }}</b></h6>
+                            <p style="font-size: 13px; color: darkred; font-weight: bold">
+                                Minimum bidding price: {{ product.minimum_bid_price }}
+                            </p>
+                            <p class="card-text">
+                            <span>
+                                    {{ product.product_description|truncatewords_html:5 }}
+                                </span>
+                            </p>
+                            <a href="#" type="button" class="btn" style="background-color: #081828; color: #ffffff"
+                               data-bs-toggle="modal"
+                               data-bs-target="#productModal{{ product.id }}">
+                                View Details</a>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="productModal{{ product.id }}" tabindex="-1"
+                                 aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div>
+                                                        <img src="{{ product.product_photo.url }}" alt="Product Photo"
+                                                             style="width: 100%">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 _product-details">
+                                                    <div class="row">
+                                                        <h3>{{ product.product_name }}</h3>
+                                                        <hr>
+                                                    </div>
+                                                    <div class="row mt-5">
+                                                        <p>
+                                                            <span class="_minimum-bidding-price">
+                                                                Minimum Bid Price: {{ product.minimum_bid_price }}
+                                                            </span>
+                                                        </p>
+                                                        <p>
+                                                            Auction End At: {{ product.auction_end_date }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="row mt-3">
+                                                        {% if timeup %}
+                                                            <h4>Winner: {{ winner }}</h4>
+                                                        {% else %}
+                                                            <h4>[[ Running ]]</h4>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="row mt-4">
+                                                        <h5 style="margin: 10px 0;">
+                                                            <a style="text-decoration: #2c3034;">Description</a>
+                                                        </h5>
+                                                        <p>
+                                                            {{ product.product_description|safe }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <table>
+                                                    <caption>Last Bidding Prices</caption>
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Product Name</th>
+                                                        <th scope="col">Bidder Name</th>
+                                                        <th scope="col">Bidding Price</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for bid in product.product.all %}
+                                                        {% if bid.bidder %}
+                                                            <tr>
+                                                                <td data-label="Date">{{ bid.date }}</td>
+                                                                <td data-label="Product Name">{{ product.product_name }}</td>
+                                                                <td data-label="Bidder Name">{{ bid.bidder }}</td>
+                                                                <td data-label="Bidding Price">{{ bid.price }}</td>
+                                                            </tr>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

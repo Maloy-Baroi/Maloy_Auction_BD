@@ -26,10 +26,10 @@ now = datetime.datetime.now()
 
 
 class ProductLastPrices(models.Model):
-    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name='product')
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     price = models.PositiveIntegerField()
-    date = models.DateField(auto_now=True)
+    date = models.DateTimeField(auto_now=True)
 
 
 # user input, Product Name, Product Description, Product Photo, Minimum Bid Price, and Auction End DateTime
