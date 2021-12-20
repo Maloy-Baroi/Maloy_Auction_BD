@@ -70,7 +70,7 @@ def logout_view(request):
 
 
 def products_gallery(request):
-    products = ProductModel.objects.all()
+    products = ProductModel.objects.filter(status=True)
     content = {
         'products': products
     }

@@ -52,12 +52,14 @@ def product_details_view(request, product_key):
     # Date End
     # Product Bidding Date Ended or not (Start)
     winner = None
+    winner_one = None
     if product.auction_end_date < today:
         product.status = False
         max_price = max([i.price for i in bidding_table.order_by('date')])
         winner_list = [i for i in bidding_table if i.price == max_price]
         old_date = min([i.date for i in winner_list])
         winner = [i for i in winner_list if i.date == old_date]
+        winner_one = winner[0].bidder
 
     # Product Bidding Date Ended or not (End)
 
@@ -71,7 +73,7 @@ def product_details_view(request, product_key):
         'bidder_exist': bidder,
         'min_bid_price': min_bid_price,
         'timeup': timeup,
-        'winner': winner
+        'winner_one': winner_one
     }
 
     return render(request, 'App_Auction/product_details.html', context=content)

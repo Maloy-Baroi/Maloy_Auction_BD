@@ -29,15 +29,37 @@
           integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous"/>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <style>
+        #sidebar {
+            background-color: #081828 !important;
+        }
+
+        .nav-link {
+            padding: 20px;
+        }
+
+        .nav-link:hover {
+            background-color: yellowgreen;
+        }
+
+        .nav-link:first-child:hover {
+            background-color: #081828 !important;
+            color: yellowgreen !important;
+        }
+
+        .nav-link a {
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
 <!-- Side-Nav -->
 <div class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column" id="sidebar">
-    <ul class="nav flex-column text-white w-100">
+    <ul class="nav flex-column text-white w-100 text-center">
         <a href="#" class="nav-link h3 text-white my-2">
             Auction BD
         </a>
-        <p style="font-size: 15px; padding: 15px">{{ user }}</p>
+        <p style="font-size: 15px; padding: 15px; margin-bottom: 100px;">{{ user }}</p>
         <li class="nav-link">
             <a href="{% url 'App_Admin:admin-dashboard' %}">
                 <i class="fa fa-dashboard"></i>
