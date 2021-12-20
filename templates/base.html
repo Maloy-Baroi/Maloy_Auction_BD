@@ -124,10 +124,10 @@
                         <div class="user">
                             <i class="lni lni-user"></i>
                             {% if user.is_authenticated %}
-                                <li class="droplink"><a href="" aria-haspopup="true">{{ user }}</a>
+                                <li class="droplink"><i class="fa fa-angle-double-down">{{ user|truncatechars:5 }}</i>
                                     <ul class="subdrop" aria-label="Main Links Sub Navigation">
                                         <li><a href="{% url 'App_Auction:my-posted-auctions' %}">My posted items</a></li>
-                                        <li><a href="">Profile Settings</a></li>
+                                        <li><a href="{% url 'App_Authentication:profile' %}">Profile Settings</a></li>
                                         <li><a href="{% url 'App_Authentication:logout' %}">Logout</a></li>
                                     </ul>
                                 </li>

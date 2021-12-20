@@ -8,7 +8,6 @@ from django.urls import reverse
 
 from App_Auction.models import *
 from App_Authentication.models import User
-import pandas as pd
 
 
 # Create your views here.
@@ -66,7 +65,7 @@ def admin_authentication_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('App_Admin:admin-authentication')
+    return redirect('App_Authentication:authentication')
 
 
 def products_gallery(request):

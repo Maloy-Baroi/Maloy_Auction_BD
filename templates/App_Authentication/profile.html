@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% block title %}
+    Profile
+{% endblock %}
+{% block main %}
+
+    <style>
+        form {
+            margin: 50px 0;
+            padding: 30px;
+            box-shadow: 0 0 10px #2c3034;
+            --webkit-box-shadow: 0 0 10px #2c3034;
+            border-radius: 10px;
+        }
+    </style>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 p-4 mt-5">
+                <h3>Profile Info</h3>
+                <div class="mt-5">
+                    <p>
+                        Name: {{ profile.full_name }}
+                    </p>
+                    <p>Username: {{ profile.username }}</p>
+                    <p>Email: {{ profile.user.email }}</p>
+                    <p>Phone: {{ profile.phone_number }}</p>
+                    <p>Address: {{ profile.House }}, {{ profile.city }}, {{ profile.country }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 p-4">
+                <h3 class="text-center mt-5">Profile Change Form</h3>
+                <form method="post" enctype="multipart/form-data" class="form-group">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-warning btn-">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

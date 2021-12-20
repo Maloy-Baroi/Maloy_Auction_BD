@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -10,11 +11,15 @@ from App_Auction.forms import *
 
 
 # Create your views here.
+def is_customer(user):
+    return user.groups.filter(name='CUSTOMER').exists()
+
+
+@user_passes_test(is_customer)
 def home_view(request):
     if not request.user.is_authenticated:
         return redirect('App_Authentication:authentication')
     products = ProductModel.objects.filter(status=True).order_by('-created')
-
     form = AuctionProductForm()
     if request.method == 'POST':
         form = AuctionProductForm(request.POST, request.FILES)

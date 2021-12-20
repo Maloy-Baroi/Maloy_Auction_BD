@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
 from django.shortcuts import render, HttpResponseRedirect, reverse, redirect
 
 # Create your views here.
-from App_Authentication.forms import SignUpForm
-from App_Authentication.models import User
+from App_Admin.views import is_admin
+from App_Authentication.forms import SignUpForm, ProfileForms
+from App_Authentication.models import User, Profile
 
 
 def is_customer(user):
@@ -24,6 +26,8 @@ def authentication_view(request):
                 login(request, user)
                 if is_customer(user):
                     return HttpResponseRedirect(reverse('home'))
+                elif is_admin(user):
+                    return HttpResponseRedirect(reverse('App_Admin:admin-dashboard'))
         else:
             form = User.objects.create(email=user_email)
             form.set_password(password)
@@ -40,3 +44,22 @@ def authentication_view(request):
 def logout_view(request):
     logout(request)
     return redirect('App_Authentication:authentication')
+
+
+@login_required
+@user_passes_test(is_customer)
+def profile_view(request):
+    profile = Profile.objects.get(user=request.user)
+    profileForm = ProfileForms(instance=request.user)
+    if request.method == 'POST':
+        profileForm = ProfileForms(data=request.POST, instance=request.user)
+        if profileForm.is_valid():
+            form = profileForm.save(commit=False)
+            form.user = request.user
+            form.save()
+
+    content = {
+        'form': profileForm,
+        'profile': profile
+    }
+    return render(request, 'App_Authentication/profile.html', context=content)
